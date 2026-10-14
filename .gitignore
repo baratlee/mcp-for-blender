@@ -33,3 +33,12 @@ supabase/.temp/
 *.pem
 *.key
 .secrets/
+
+# Local Claude Code files: only project memory is version-controlled
+# (.claude/CLAUDE.md + .claude/memory/). settings.local.json etc. stay local.
+.claude/*
+!.claude/CLAUDE.md
+!.claude/memory/
+
+# PersonalDocs is version-controlled in full, including its scripts/ dirs
+!/PersonalDocs/**/scripts/
