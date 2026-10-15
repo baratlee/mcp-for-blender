@@ -2,6 +2,14 @@
 
 仅与本项目（mcp-for-blender）相关的本机事实。带日期的均为观测值，以实查为准。
 
+> **跨机器注意：** 本文件和 `PersonalDocs/` 里的绝对路径（`G:\Workspace\...`、`G:\baratli_BARATLI-PC1_4572\...`、`D:\Blender 5.2` 等）都是 BARATLI-PC1 上的值。换电脑时按实查替换，不要照用。素材目录和 P4 工作区不在 git 里，需要另行准备。
+
+## MCP 客户端接入（2026-10-14 起）
+
+- 仓库根目录的 `.mcp.json` 是项目级配置，随 git 共享。它声明 `blender` 服务端，启动命令是 `uv run --directory . mcp-for-blender`，跑本仓库源码，与本仓库插件版本一致；同时设了 `DISABLE_TELEMETRY=true`。
+- 每台电脑首次在本仓库启动 `claude` 时，需要用户批准这个项目级服务端，批准前 `claude mcp list` 显示 `Pending approval`。
+- Codex 另有自己的配置 `~/.codex/config.toml`，它跑的是上游 PyPI 包 `blender-mcp`，与本配置无关。
+
 ## 改插件后的部署流程
 
 Blender 只从自己的 `scripts\addons` 加载插件，不读本仓库。改完根目录 `addon.py` 后：
@@ -16,11 +24,11 @@ cp addon.py src/blender_mcp/bundled/addon.py && uv run mcp-for-blender install-a
 
 对插件 socket 直接发 JSON 可绕过 MCP 服务端单测插件这一侧：`{"type":"ping"}` 应返回 `pong: True`，`{"type":"get_addon_info"}` 可读到 `protocol_version`（应等于 `addon_manager.EXPECTED_ADDON_PROTOCOL_VERSION`）。发命令前先确认 Blender 进程在运行且端口在监听（`Get-NetTCPConnection -State Listen -LocalPort 9876`）。
 
-## 已核实的状态（2026-09-26）
+## 已核实的状态（BARATLI-PC1，2026-09-26）
 
 - 插件端口 9876，监听 127.0.0.1；未设置 `BLENDER_PORT` / `BLENDER_HOST` 环境变量。
 - 已装插件与仓库 `addon.py` 逐字节一致，协议版本 11，插件版本 1.7。
-- 未核实：MCP 客户端配置用的是 `uvx mcp-for-blender`（PyPI 发布版）还是指向本仓库源码；服务端到插件的完整链路未测过。
+- 2026-10-14：Claude Code 原本没有配置 Blender MCP，已改为用 `.mcp.json` 接入（见上节）。服务端能独立完成 MCP `initialize` 握手；服务端到插件的完整链路仍未测过。
 - uv 缓存中 `archive-v0/8-sKVQUpzFPgpIzt` 含 `__editable__.mcp_for_blender-2.1.0.pth`，是指向本仓库的开发模式安装，别清。
 
 ## LT009：人形动画编辑（2026-10-13 从 Sampler 迁入）
