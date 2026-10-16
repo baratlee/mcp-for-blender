@@ -8,7 +8,10 @@
 
 - 仓库根目录的 `.mcp.json` 是项目级配置，随 git 共享。它声明 `blender` 服务端，启动命令是 `uv run --directory . mcp-for-blender`，跑本仓库源码，与本仓库插件版本一致；同时设了 `DISABLE_TELEMETRY=true`。
 - 每台电脑首次在本仓库启动 `claude` 时，需要用户批准这个项目级服务端，批准前 `claude mcp list` 显示 `Pending approval`。
-- Codex 另有自己的配置 `~/.codex/config.toml`，它跑的是上游 PyPI 包 `blender-mcp`，与本配置无关。
+- Codex 有两层配置：
+  - 项目级 `.codex/config.toml`（2026-10-15 加入，随 git 共享）：启动命令、环境变量与 `.mcp.json` 相同，两个文件要一起改。
+  - 用户级 `~/.codex/config.toml`（只在本机）：同名的 `blender` 跑上游 PyPI 包 `blender-mcp`。
+  - 未验证：Codex 是否加载项目级配置（可能要求先信任本项目），以及两层同名时哪层生效。用 Codex 前先实查。
 
 ## 改插件后的部署流程
 
